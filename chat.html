@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>聊天</title>
+
+	<script src="./jquery.js"></script>
+
+	<style>
+		#show{
+			width: 500px;
+			min-height: 300px;
+			border: 1px solid #ccc;
+			overflow-y: scroll;
+		}
+	</style>
+</head>
+<body>
+	
+	<h3>欢迎来到1024聊天室</h3>
+	<div id="show">
+		
+
+		<ul>
+			
+		</ul>
+		
+	</div>
+	
+		
+	<input type="text" placeholder="输入你聊天内容"  name="chat"/><button>发送</button>
+
+	<!-- 这是加载socket.io这个js文件 -->
+	<script src="/socket.io/socket.io.js"></script>
+
+	<script>
+
+		//连接服务器
+	  var socket = io('http://192.168.17.88:3000');
+
+
+	  //客户端监听msg事件，就可以拿到服务器广播的数据
+	 	socket.on('msg', function (data) {
+
+	 		// console.log(data);
+	 		
+	 		var li = '<li>'+data.server+'</li>';
+
+	 		console.log(li);
+	 		
+	 		$('ul').append(li);
+	 	});
+
+
+
+
+	</script>
+
+
+	<script>
+		
+		
+		//先拿到用户输入的内容
+		$('button').click( function () {
+
+			var ct= $('input[name=chat]').val();
+
+			if (ct=='') {
+
+				alert('请输入内容');
+
+				return false;
+			}
+
+			//发送数据给服务器
+			socket.emit('chat', { my: ct });
+
+		} );
+	</script>
+</body>
+</html>
